@@ -11,34 +11,52 @@ namespace RPGDemage
             while (true)
             {
                 Console.WriteLine("Hello World Hero!");
-                Console.WriteLine("Press any key (except the power button) to know how many damage did your Hero taken and dealt!");
+                Console.WriteLine("Press any key (except the power button) to play!");
                 Console.ReadLine();
+                Console.Clear();
 
-                Combatant hero = new Combatant(3000, 0);
-                Combatant monster = new Combatant(2000, 0);
+                Weapon stick = new Weapon("Holy Wooden Stick", 100);
+                Weapon sword = new Weapon("Despicable Longsword", 80);
+                Combatant hero = new Combatant(3000, 30); hero.weapon = stick;
+                Combatant monster = new Combatant(2000, 50); monster.weapon = sword;
+                
                 int roundCount = 0;
 
-                using (StreamReader sr = new StreamReader("attack_log.txt"))
                 {
-                    string line;
-                    while ((line = sr.ReadLine()) != null)
+                    while (hero.health > 0 && monster.health  > 0)
                     {
-                        string[] parts = line.Split(' ');
-                        if (parts.Length == 2)
+                        if (roundCount%2 == 1)
                         {
-                            if (parts[0] == "monster")
-                            {
-                                monster.Attack(hero,Int32.Parse(parts[1]));
-                                Console.WriteLine($"Attacker: {parts[0]} // Damage: {parts[1]}");
+                            Console.WriteLine("Monster's turn!");
+                            Console.WriteLine("Press any key (except the power button) to attack!");
+                            Console.ReadLine();
+                            Console.Clear();
 
-                            }
-                            else if (parts[0] == "hero")
-                            {
-                                hero.Attack(monster, Int32.Parse(parts[1]));
-                                Console.WriteLine($"Defender: {parts[0]} // Damage: {parts[1]}");
-                            }
-                            roundCount++;
+                            int dmg = monster.Attack(hero);
+                            Console.WriteLine($"Attacker: Monster // {monster.weapon.name} made {dmg} damage!");
+
                         }
+                        else
+                        {
+                            Console.WriteLine("Hero's turn!");
+                            Console.WriteLine("Press any key (except the power button) to attack!");
+                            Console.ReadLine();
+                            Console.Clear();
+
+                            int dmg = hero.Attack(hero);
+                            Console.WriteLine($"Attacker: Hero // {hero.weapon.name} made {dmg} damage!");
+                        }
+                        Console.WriteLine($"\nHero's health: {hero.health}");
+                        Console.WriteLine($"Monster's health: {monster.health}\n");
+                        roundCount++;
+                    }
+                    if (hero.health > 0)
+                    {
+                        Console.WriteLine("You are dead! Shame on you!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Oh my God, you killed Monster! You bastard!");
                     }
                 }
 
@@ -58,6 +76,7 @@ namespace RPGDemage
             public int damageDealt;
             public int health;
             public int armour;
+            public Weapon weapon;
 
             public Combatant(int health, int armour)
             {
@@ -67,9 +86,11 @@ namespace RPGDemage
                 this.armour = armour;
             }
 
-            public void Attack(Combatant attackedCombatant, int damage)
+            public int Attack(Combatant attackedCombatant)
             {
-               damageDealt += attackedCombatant.Defend(damage);
+                int dmg = attackedCombatant.Defend(weapon.damage);
+                damageDealt += dmg;
+                return dmg;
             }
 
             public int Defend(int damage)
@@ -88,6 +109,18 @@ namespace RPGDemage
 
             }
 
+        }
+
+        public class Weapon
+        {
+            public string name;
+            public int damage;
+
+            public Weapon(string name, int damage)
+            {
+                this.name = name;
+                this.damage = damage;
+            }
         }
     }
 }
