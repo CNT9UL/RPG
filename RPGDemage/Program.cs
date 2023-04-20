@@ -15,8 +15,8 @@ namespace RPGDemage
                 Console.ReadLine();
                 Console.Clear();
 
-                Weapon stick = new Weapon("Holy Wooden Stick", 100);
-                Weapon sword = new Weapon("Despicable Longsword", 80);
+                Weapon stick = new Weapon("Holy Wooden Stick", 100, 120);
+                Weapon sword = new Weapon("Despicable Longsword", 80, 90);
                 Combatant hero = new Combatant(3000, 30); hero.weapon = stick;
                 Combatant monster = new Combatant(2000, 50); monster.weapon = sword;
                 
@@ -43,7 +43,7 @@ namespace RPGDemage
                             Console.ReadLine();
                             Console.Clear();
 
-                            int dmg = hero.Attack(hero);
+                            int dmg = hero.Attack(monster);
                             Console.WriteLine($"Attacker: Hero // {hero.weapon.name} made {dmg} damage!");
                         }
                         Console.WriteLine($"\nHero's health: {hero.health}");
@@ -52,7 +52,7 @@ namespace RPGDemage
                     }
                     if (hero.health > 0)
                     {
-                        Console.WriteLine("You are dead! Shame on you!");
+                        Console.WriteLine("Hero, you are dead! Shame on you!");
                     }
                     else
                     {
@@ -60,7 +60,7 @@ namespace RPGDemage
                     }
                 }
 
-                Console.WriteLine("Total damage received: " + hero.damageReceived);
+                Console.WriteLine("Hero:\n Total damage received: " + hero.damageReceived);
                 Console.WriteLine("Total damage dealt: " + hero.damageDealt);
                 Console.WriteLine($"In {roundCount} rounds");
                 Console.WriteLine("Press any key (except the power button) to continue!");
@@ -114,13 +114,22 @@ namespace RPGDemage
         public class Weapon
         {
             public string name;
-            public int damage;
-
-            public Weapon(string name, int damage)
+            int minDamage;
+            int maxDamage;
+            public int damage => CalculateDamage();
+            public Weapon(string name, int minDamage, int maxDamage)
             {
                 this.name = name;
-                this.damage = damage;
+                this.minDamage = minDamage;
+                this.maxDamage = maxDamage;
             }
+
+            private int CalculateDamage()
+            {
+                Random rnd = new Random();
+                return rnd.Next(minDamage, maxDamage + 1);
+            }
+           
         }
     }
 }
