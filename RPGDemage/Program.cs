@@ -50,17 +50,19 @@ namespace RPGDemage
                         Console.WriteLine($"Monster's health: {monster.health}\n");
                         roundCount++;
                     }
-                    if (hero.health > 0)
+                    if (hero.health < 0)
                     {
+                        Console.Clear();
                         Console.WriteLine("Hero, you are dead! Shame on you!");
                     }
                     else
                     {
+                        Console.Clear();
                         Console.WriteLine("Oh my God, you killed Monster! You bastard!");
                     }
                 }
 
-                Console.WriteLine("Hero:\n Total damage received: " + hero.damageReceived);
+                Console.WriteLine("Hero:\nTotal damage received: " + hero.damageReceived);
                 Console.WriteLine("Total damage dealt: " + hero.damageDealt);
                 Console.WriteLine($"In {roundCount} rounds");
                 Console.WriteLine("Press any key (except the power button) to continue!");
